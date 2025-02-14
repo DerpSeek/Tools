@@ -83,10 +83,10 @@ jobs:
         run: |
           echo "开始部署模型：${{ github.event.inputs.model }}"
           ollama pull ${{ github.event.inputs.model }}
-          sudo mkdir -p /home/runner/work/models
+          sudo mkdir -p ${{ github.workspace }}/models
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
-          echo -e "[Service]\nEnvironment=\"OLLAMA_MODELS=/home/runner/work/models\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
+          echo -e "[Service]\nEnvironment=\"OLLAMA_MODELS=${{ github.workspace }}/models\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
           sleep 2
