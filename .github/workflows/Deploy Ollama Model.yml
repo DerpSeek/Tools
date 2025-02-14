@@ -12,11 +12,12 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     steps:
-      # - name: 最大化磁盘空间
-      #   uses: easimon/maximize-build-space@master
-      #   with:
-      #     overprovision-lvm: 'true'
-      #     remove-dotnet: 'true'
+      - name: 最大化磁盘空间
+        uses: easimon/maximize-build-space@master
+        with:
+          overprovision-lvm: 'true'
+          remove-dotnet: 'true'
+          build-mount-path: '/home/runner/work'
     
       - name: 迁出代码
         uses: actions/checkout@v3
