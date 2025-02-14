@@ -1,0 +1,120 @@
+name: Deploy Ollama Model
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: '模型名称'
+        required: true
+        default: 'deepseek-r1:14b'
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 迁出代码
+        uses: actions/checkout@v3
+
+      - name: 检查服务器配置
+        id: check_server
+        run: |
+          echo -e "已知CPU型号(性能降序): 7763，8370C，8272CL，8171M，E5-2673\n"
+          echo "--------------------------CPU信息--------------------------"
+          echo "CPU物理数量: $(cat /proc/cpuinfo | grep 'physical id' | sort | uniq | wc -l)"
+          echo "CPU核心数量: $(nproc)"
+          echo -e "CPU型号信息:$(cat /proc/cpuinfo | grep -m1 name | awk -F: '{print $2}')\n"
+          echo "--------------------------内存信息--------------------------"
+          echo "已安装内存详细信息:"
+          echo -e "$(sudo lshw -short -C memory | grep GiB)\n"
+          echo "--------------------------硬盘信息--------------------------"
+          echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
+          echo "--------------------------网络信息--------------------------"
+          curl -s -4 ipinfo.io > raw_net_info
+          cat raw_net_info | jq -r '
+            "IP地址           \(.ip)\n" +
+            "所在城市         \(.city)\n" +
+            "所在区域         \(.region)\n" +
+            "国家             \(.country)\n" +
+            "地理位置         \(.loc)\n" +
+            "组织             \(.org)\n" +
+            "邮政编码         \(.postal)\n" +
+            "所在时区         \(.timezone)\n"'
+
+          echo "public_ip=$(cat raw_net_info | jq -r '.ip')" >> $GITHUB_OUTPUT
+          echo "city=$(cat raw_net_info | jq -r '.city')" >> $GITHUB_OUTPUT
+          echo "region=$(cat raw_net_info | jq -r '.region')" >> $GITHUB_OUTPUT
+          echo "country=$(cat raw_net_info | jq -r '.country')" >> $GITHUB_OUTPUT
+          echo "loc=$(cat raw_net_info | jq -r '.loc')" >> $GITHUB_OUTPUT
+          echo "org=$(cat raw_net_info | jq -r '.org')" >> $GITHUB_OUTPUT
+          echo "postal=$(cat raw_net_info | jq -r '.postal')" >> $GITHUB_OUTPUT
+          echo "timezone=$(cat raw_net_info | jq -r '.timezone')" >> $GITHUB_OUTPUT
+          
+      - name: 加入Tailscale私有网络
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:githubactions
+          version: latest
+
+      - name: 查看IP地址
+        id: get_local_ip
+        run: |
+          ip a
+          LOCAL_IP=$(ip -o -4 addr list | awk '/100\./ {print $4}' | cut -d/ -f1)
+          echo "提取到本地 IP: ${LOCAL_IP}"
+          echo "local_ip=${LOCAL_IP}" >> $GITHUB_OUTPUT
+
+      - name: 部署Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: 部署选定模型
+        run: |
+          echo "开始部署模型：${{ github.event.inputs.model }}"
+          ollama pull ${{ github.event.inputs.model }}
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+          sleep 2
+          ollama run ${{ github.event.inputs.model }}
+          
+      - name: 部署Open WebUI
+        run: |
+          echo "开始部署Open WebUI:"
+          docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+          echo "地址：IP:8080"
+
+      - name: 部署Dify
+        run: |
+          git clone https://github.com/langgenius/dify.git
+          cd dify
+          cd docker
+          cp .env.example .env
+          docker compose up -d
+          echo "地址：IP:80"
+
+      - name: 发送通知
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            大模型部署完成：
+            公网IP: ${{ steps.check_server.outputs.public_ip }}
+              城市: ${{ steps.check_server.outputs.city }}
+              区域: ${{ steps.check_server.outputs.region }}
+              国家: ${{ steps.check_server.outputs.country }}
+              位置: ${{ steps.check_server.outputs.loc }}
+              组织: ${{ steps.check_server.outputs.org }}
+              邮编: ${{ steps.check_server.outputs.postal }}
+              时区: ${{ steps.check_server.outputs.timezone }}
+            本地IP: ${{ steps.get_local_ip.outputs.local_ip }}
+            模型: ${{ github.event.inputs.model }}
+            Ollama API地址：http://${{ steps.get_local_ip.outputs.local_ip }}:11434
+            Open WebUI地址: http://${{ steps.get_local_ip.outputs.local_ip }}:8080
+            Dify地址: http://${{ steps.get_local_ip.outputs.local_ip }}
+
+      - name: 启动SSH终端
+        uses: mxschmitt/action-tmate@v3
