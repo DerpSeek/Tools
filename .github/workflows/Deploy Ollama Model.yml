@@ -20,7 +20,7 @@ jobs:
           remove-android: 'true'
           remove-haskell: 'true'
           remove-codeql: 'true'
-          build-mount-path: '/home/runner/work'
+          # build-mount-path: '/home/runner/work'
     
       - name: 迁出代码
         uses: actions/checkout@v3
@@ -83,9 +83,10 @@ jobs:
         run: |
           echo "开始部署模型：${{ github.event.inputs.model }}"
           ollama pull ${{ github.event.inputs.model }}
+          sudo mkdir ${GITHUB_WORKSPACE}/models
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
-          echo -e "[Service]\nEnvironment=\"OLLAMA_MODELS=/home/runner/work\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
+          echo -e "[Service]\nEnvironment=\"OLLAMA_MODELS=${GITHUB_WORKSPACE}/models\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
           sleep 2
