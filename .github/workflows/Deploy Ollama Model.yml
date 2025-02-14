@@ -85,6 +85,7 @@ jobs:
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           echo -e "Environment=\"OLLAMA_MODELS=${{ github.workspace }}/models\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
+          sudo cat /etc/systemd/system/ollama.service.d/override.conf
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
           echo "开始部署模型：${{ github.event.inputs.model }}"
