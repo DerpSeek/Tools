@@ -17,7 +17,7 @@ jobs:
         with:
           swap-size-mb: 2048
           temp-reserve-mb: 100
-          root-reserve-mb: 4096
+          root-reserve-mb: 'true'
           remove-dotnet: 'true'
           remove-docker-images: 'true'
     
