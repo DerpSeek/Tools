@@ -17,6 +17,9 @@ jobs:
         with:
           overprovision-lvm: 'true'
           remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
           build-mount-path: '/home/runner/work'
     
       - name: 迁出代码
@@ -82,6 +85,7 @@ jobs:
           ollama pull ${{ github.event.inputs.model }}
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
+          echo -e "[Service]\nEnvironment=\"OLLAMA_MODELS=/home/runner/work\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
           sleep 2
