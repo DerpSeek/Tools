@@ -90,7 +90,7 @@ jobs:
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
           sleep 2
-          ollama run ${{ github.event.inputs.model }}
+          # ollama run ${{ github.event.inputs.model }}
           
       - name: 部署Open WebUI
         run: |
