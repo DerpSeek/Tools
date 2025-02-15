@@ -74,11 +74,15 @@ jobs:
           sudo mkdir -p ${{ github.workspace }}/models
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           echo -e "Environment=\"OLLAMA_MODELS=${{ github.workspace }}/models\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
+          echo -e "Environment=\"OLLAMA_KEEP_ALIVE=6h\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           cat /etc/systemd/system/ollama.service.d/override.conf
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
           journalctl -u ollama --no-pager
           sleep 10
+
+      - name: 启动SSH终端
+        uses: mxschmitt/action-tmate@v3
 
       - name: 部署选定模型
         run: |
