@@ -75,6 +75,7 @@ jobs:
           cd exo
           pip install -e .
           source install.sh
+          echo 启动EXO
           exo
 
       - name: 发送通知
@@ -83,7 +84,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            服务器部署完成：
+            EXO部署完成：
             公网IP: ${{ steps.check_server.outputs.public_ip }}
               城市: ${{ steps.check_server.outputs.city }}
               区域: ${{ steps.check_server.outputs.region }}
