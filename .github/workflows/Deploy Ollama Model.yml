@@ -78,8 +78,12 @@ jobs:
           cat /etc/systemd/system/ollama.service.d/override.conf
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
-          journalctl -u ollama --no-pager
           sleep 2
+          journalctl -u ollama --no-pager
+          
+      - name: 启动SSH终端
+        uses: mxschmitt/action-tmate@v3
+
 
       - name: 部署选定模型
         run: |
@@ -122,5 +126,4 @@ jobs:
             Open WebUI地址: http://${{ steps.get_local_ip.outputs.local_ip }}:8080
             Dify地址: http://${{ steps.get_local_ip.outputs.local_ip }}
 
-      - name: 启动SSH终端
-        uses: mxschmitt/action-tmate@v3
+
