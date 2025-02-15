@@ -80,10 +80,6 @@ jobs:
           sudo systemctl restart ollama
           sleep 2
           journalctl -u ollama --no-pager
-          
-      - name: 启动SSH终端
-        uses: mxschmitt/action-tmate@v3
-
 
       - name: 部署选定模型
         run: |
