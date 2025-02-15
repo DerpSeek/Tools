@@ -70,8 +70,8 @@ jobs:
           sudo mkdir -p /usr/share/ollama/.ollama/models
           sudo mkdir -p ${{ github.workspace }}/models
           sudo ln -s ${{ github.workspace }}/models /usr/share/ollama/.ollama/models
-          sudo chown ollama:ollama /usr/share/ollama/.ollama/models
           curl -fsSL https://ollama.com/install.sh | sh
+          sudo chown ollama:ollama /usr/share/ollama/.ollama/models
 
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
