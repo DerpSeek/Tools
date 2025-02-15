@@ -70,7 +70,7 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           mkdir -p ${{ github.workspace }}/models
-          sudo chown ollama:ollama ${{ github.workspace }}/models
+          sudo mount --bind ${{ github.workspace }}/models /usr/share/ollama/.ollama/models
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           echo -e "Environment=\"OLLAMA_MODELS=${{ github.workspace }}/models\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           cat /etc/systemd/system/ollama.service.d/override.conf
