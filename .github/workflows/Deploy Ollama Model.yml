@@ -78,7 +78,7 @@ jobs:
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
           journalctl -u ollama --no-pager
-          sleep 2
+          sleep 10
 
       - name: 部署选定模型
         run: |
