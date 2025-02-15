@@ -74,7 +74,9 @@ jobs:
           echo -e "Environment=\"OLLAMA_MODELS=${{ github.workspace }}/models\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           cat /etc/systemd/system/ollama.service.d/override.conf
           sudo systemctl daemon-reload
+          sleep 2
           sudo systemctl restart ollama
+          sleep 2
 
       - name: 部署选定模型
         run: |
