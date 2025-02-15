@@ -62,8 +62,7 @@ jobs:
          
       - name: 部署CyberChef
         run: |
-          docker run -it -p 80:80 --name CyberChef --restart=always ghcr.io/gchq/cyberchef:latest
-
+          docker run -p 80:80 --name CyberChef --restart=always ghcr.io/gchq/cyberchef:latest
 
       - name: 发送通知
         uses: appleboy/telegram-action@master
