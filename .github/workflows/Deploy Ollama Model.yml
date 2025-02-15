@@ -12,9 +12,6 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 迁出代码
-        uses: actions/checkout@v3
-
       - name: 最大化磁盘空间
         uses: easimon/maximize-build-space@master
         with:
@@ -24,7 +21,9 @@ jobs:
           remove-haskell: 'true'
           remove-codeql: 'true'
 
-        
+      - name: 迁出代码
+        uses: actions/checkout@v3
+
       - name: 检查服务器配置
         id: check_server
         run: |
