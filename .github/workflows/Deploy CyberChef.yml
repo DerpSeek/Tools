@@ -70,7 +70,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            服务器部署完成：
+            CyberChef部署完成：
             公网IP: ${{ steps.check_server.outputs.public_ip }}
               城市: ${{ steps.check_server.outputs.city }}
               区域: ${{ steps.check_server.outputs.region }}
