@@ -81,9 +81,6 @@ jobs:
           journalctl -u ollama --no-pager
           sleep 2
 
-      - name: 启动SSH终端
-        uses: mxschmitt/action-tmate@v3
-
       - name: 部署选定模型
         run: |
           echo "开始部署模型：${{ github.event.inputs.model }}"
