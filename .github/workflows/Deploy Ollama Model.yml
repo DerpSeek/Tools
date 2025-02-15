@@ -94,7 +94,7 @@ jobs:
         run: |
           echo "开始部署模型：${{ github.event.inputs.model }}"
           ollama run ${{ github.event.inputs.model }}
-          echo "--------------------部署模型后硬盘信息-----------------------"
+          echo "--------------------------硬盘信息--------------------------"
           echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
           
       - name: 部署Open WebUI
@@ -111,6 +111,8 @@ jobs:
           cp .env.example .env
           docker compose up -d
           echo "地址：IP:80"
+          echo "--------------------------硬盘信息--------------------------"
+          echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
 
       - name: 发送通知
         uses: appleboy/telegram-action@master
