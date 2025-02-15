@@ -68,13 +68,13 @@ jobs:
       - name: 部署Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
-          sudo usermod -a -G root ollama
 
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           sudo mkdir -p ${{ github.workspace }}/models
           echo -e "[Service]\nEnvironment=\"OLLAMA_HOST=0.0.0.0:11434\"" | sudo tee /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           echo -e "Environment=\"OLLAMA_MODELS=${{ github.workspace }}/models\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           echo -e "Environment=\"OLLAMA_KEEP_ALIVE=6h\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
+          echo -e "Environment=\"User=runner\"" | sudo tee -a /etc/systemd/system/ollama.service.d/override.conf > /dev/null
           cat /etc/systemd/system/ollama.service.d/override.conf
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
