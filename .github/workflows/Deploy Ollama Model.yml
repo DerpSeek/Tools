@@ -68,7 +68,7 @@ jobs:
       - name: 部署Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
-          sudo usermod -a -G runner ollama
+          sudo usermod -a -G root ollama
 
           sudo mkdir -p /etc/systemd/system/ollama.service.d
           sudo mkdir -p ${{ github.workspace }}/models
