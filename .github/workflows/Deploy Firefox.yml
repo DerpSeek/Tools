@@ -76,12 +76,12 @@ jobs:
               邮编: ${{ steps.check_server.outputs.postal }}
               时区: ${{ steps.check_server.outputs.timezone }}
             本地IP: ${{ steps.get_local_ip.outputs.local_ip }}
-            服务地址：http://${{ steps.get_local_ip.outputs.local_ip }}:5800
+            服务地址：http://${{ steps.get_local_ip.outputs.local_ip }}:80
 
       - name: 安装Firefox
         run: |
-          docker run -d --name=firefox -p 5800:5800 -e LANG=zh_CN.UTF-8 -e ENABLE_CJK_FONT=1 jlesage/firefox
-          echo "地址：IP:5800"
+          docker run -d --name=firefox -p 80:5800 -e WEB_AUDIO=1 -e LANG=zh_CN.UTF-8 -e ENABLE_CJK_FONT=1 jlesage/firefox
+          echo "地址：IP:80"
       - name: 启动SSH终端
         uses: mxschmitt/action-tmate@v3
 
