@@ -67,10 +67,10 @@ jobs:
 
       - name: 部署Ollama
         run: |
-          sudo mkdir -p /usr/share/ollama/.ollama
-          sudo mkdir -p ${{ github.workspace }}/models
-          sudo ln -s ${{ github.workspace }}/models /usr/share/ollama/.ollama/models
           curl -fsSL https://ollama.com/install.sh | sh
+          rm -rf /usr/share/ollama/.ollama/models
+          sudo mkdir ${{ github.workspace }}/models
+          sudo ln -s ${{ github.workspace }}/models /usr/share/ollama/.ollama/models
           sudo chown ollama:ollama /usr/share/ollama/.ollama/models
 
           sudo mkdir -p /etc/systemd/system/ollama.service.d
