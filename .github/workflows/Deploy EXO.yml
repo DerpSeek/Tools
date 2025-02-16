@@ -84,7 +84,8 @@ jobs:
           source install.sh
           echo 启动EXO
           mkdir ${{ github.workspace }}/models
-          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} --save-checkpoint-dir ${{ github.workspace }}/models run llama-3.3-70b >/dev/null 2>&1 &
+          # exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} --save-checkpoint-dir ${{ github.workspace }}/models run llama-3.3-70b >/dev/null 2>&1 &
+          screen -S Exo -dm bash -c "exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} --save-checkpoint-dir ${{ github.workspace }}/models run llama-3.3-70b; exec bash"
 
       - name: 发送通知
         uses: appleboy/telegram-action@master
