@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        instance: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] 
+        # instance: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] 
+        instance: [0, 1, 2] 
     steps:
       - name: 最大化磁盘空间
         uses: easimon/maximize-build-space@master
