@@ -80,7 +80,8 @@ jobs:
           pip install -e .
           source install.sh
           echo 启动EXO
-          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
+          mkdir models
+          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} --models-seed-dir ./models run llama-3.3-70b >/dev/null 2>&1 &
 
       - name: 发送通知
         uses: appleboy/telegram-action@master
