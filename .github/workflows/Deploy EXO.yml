@@ -84,7 +84,9 @@ jobs:
           source install.sh
           echo 启动EXO
           mkdir ${{ github.workspace }}/models
-          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
+          # exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
+          echo "exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }}" > exo.sh&&chmod a+x exo.sh
+          bash exo.sh >/dev/null 2>&1 &
 
       - name: 发送通知
         uses: appleboy/telegram-action@master
