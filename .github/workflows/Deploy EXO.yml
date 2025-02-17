@@ -86,7 +86,7 @@ jobs:
           mkdir ${{ github.workspace }}/models
           exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
 
-          cat > exorestart.sh << 'EOF'
+          cat > /home/runner/restart.sh << 'EOF'
           #!/bin/bash
 
           # 查找包含 'exo' 的进程并终止
