@@ -61,12 +61,11 @@ jobs:
           echo "local_ip=${LOCAL_IP}" >> $GITHUB_OUTPUT
 
       - name: 安装1Panel
-        id: install_1panel  # 添加步骤ID用于输出变量
+        id: install_1panel
         run: |
           curl -sSL https://resource.fit2cloud.com/1panel/package/quick_start.sh -o quick_start.sh
           printf "2\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" | sudo bash quick_start.sh
           
-          # 捕获1Panel登录信息并设置为输出变量
           sudo 1pctl user-info > panel_info.txt
           PANEL_URL=$(awk '{sub(/\$LOCAL_IP/, "${{ steps.get_local_ip.outputs.local_ip }}"); gsub(/面板地址：/, ""); print; exit}' panel_info.txt)
           echo $PANEL_URL
