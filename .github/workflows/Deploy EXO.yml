@@ -84,9 +84,22 @@ jobs:
           source install.sh
           echo 启动EXO
           mkdir ${{ github.workspace }}/models
-          # exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
-          echo "exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }}" > exo.sh&&chmod a+x exo.sh
-          bash exo.sh >/dev/null 2>&1 &
+          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
+
+          cat > exorestart.sh << 'EOF'
+          #!/bin/bash
+
+          # 查找包含 'exo' 的进程并终止
+          ps aux | grep 'exo' | grep -v grep | awk '{print $2}' | while read pid; do
+              echo "Killing process $pid"
+              kill -9 $pid
+          done
+
+          echo "All processes containing 'exo' have been terminated."
+          echo "Running EXO."
+          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }}
+          EOF
+
 
       - name: 发送通知
         uses: appleboy/telegram-action@master
