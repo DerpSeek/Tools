@@ -82,8 +82,8 @@ jobs:
           cd exo
           pip install -e .
           source install.sh
-          echo 启动EXO
           mkdir ${{ github.workspace }}/models
+          echo 启动EXO
           exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
 
           cat > /home/runner/restart.sh << 'EOF'
@@ -117,6 +117,7 @@ jobs:
               邮编: ${{ steps.check_server.outputs.postal }}
               时区: ${{ steps.check_server.outputs.timezone }}
             本地IP: ${{ steps.get_local_ip.outputs.local_ip }}
+            服务地址：http://${{ steps.get_local_ip.outputs.local_ip }}:52415
               
       - name: 启动SSH终端
         uses: mxschmitt/action-tmate@v3
