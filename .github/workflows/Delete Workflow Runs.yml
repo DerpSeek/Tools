@@ -1,4 +1,4 @@
-name: 删除工作流运行记录
+name: Delete Workflow Runs
 on:
   workflow_dispatch:
     inputs:
