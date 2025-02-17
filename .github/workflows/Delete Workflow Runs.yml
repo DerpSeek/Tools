@@ -11,10 +11,10 @@ on:
         required: true
         default: '0'
       delete_workflow_pattern:
-        description: '要删除的工作流名称或文件名（如果未设置，则删除所有工作流）'
+        description: '要删除的工作流名称或文件名'
         required: false
       delete_workflow_by_state_pattern:
-        description: '按状态筛选要删除的工作流：active（活跃）、deleted（已删除）、disabled_fork（因 Fork 被禁用）、disabled_inactivity（因不活跃被禁用）、disabled_manually（手动禁用）'
+        description: '按状态筛选要删除的工作流：'
         required: true
         default: "ALL"
         type: choice
@@ -25,7 +25,7 @@ on:
           - disabled_inactivity
           - disabled_manually
       delete_run_by_conclusion_pattern:
-        description: '根据运行结果删除运行记录：action_required（需要操作）、cancelled（已取消）、failure（失败）、skipped（跳过）、success（成功）'
+        description: '根据运行结果删除运行记录：'
         required: true
         default: "ALL"
         type: choice
