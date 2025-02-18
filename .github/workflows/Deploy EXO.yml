@@ -84,7 +84,7 @@ jobs:
           source install.sh
           mkdir ${{ github.workspace }}/models
           echo 启动EXO
-          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} run llama-3.2-3b-bf16 >/dev/null 2>&1 &
+          exo --discovery-module tailscale --tailscale-api-key ${{ secrets.TS_API_KEY }} --tailnet-name ${{ secrets.TS_NETNAME }} >/dev/null 2>&1 &
 
           cat > /home/runner/restart.sh << 'EOF'
           #!/bin/bash
